@@ -53,6 +53,12 @@ void test_args_negative_offset() {
     assert(parse_args(5, argv, &cfg) == -1); 
 }
 
+void test_file_not_found() {
+    Config cfg;
+    init_config(&cfg);
+    assert(process_file("non_existent_file_12345.bin", &cfg) == -1);
+}
+
 int main() {
     printf("--- Starting Integration Tests ---\n");
     RUN_TEST(test_args_no_required_params);
@@ -60,5 +66,6 @@ int main() {
     RUN_TEST(test_args_invalid_chunk_size);
     RUN_TEST(test_args_chunk_size_too_large);
     RUN_TEST(test_args_negative_offset);
+    RUN_TEST(test_file_not_found);
     return 0;
 }
