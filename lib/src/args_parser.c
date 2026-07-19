@@ -86,6 +86,11 @@ int parse_args(int argc, char** argv, Config* cfg) {
         return -1;
     }
 
+    if (cfg->offset < 0) {
+        fprintf(stderr, "Error: Offset (-o) cannot be negative.\n");
+        return -1;
+    }
+
     if (cfg->length < -1) {
         fprintf(stderr, "Error: Length (-l) cannot be negative.\n");
         return -1;
