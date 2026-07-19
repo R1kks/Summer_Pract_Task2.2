@@ -10,5 +10,8 @@ set(CMAKE_C_STANDARD 11)
 
 include(${CMAKE_SOURCE_DIR}/cmake/MyFunctions.cmake)
 
+enable_testing()
+
 add_subdirectory(lib)
 add_subdirectory(app)
+add_subdirectory(tests)
