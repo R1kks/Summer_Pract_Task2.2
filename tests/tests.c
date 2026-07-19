@@ -32,9 +32,17 @@ void test_args_conflict_params() {
     assert(parse_args(5, argv, &cfg) == -1);
 }
 
+void test_args_invalid_chunk_size() {
+    Config cfg;
+    init_config(&cfg);
+    char* argv[] = {"hexdump", "-i", "test.bin", "-g", "-5"};
+    assert(parse_args(5, argv, &cfg) == -1);
+}
+
 int main() {
     printf("--- Starting Integration Tests ---\n");
     RUN_TEST(test_args_no_required_params);
     RUN_TEST(test_args_conflict_params);
+    RUN_TEST(test_args_invalid_chunk_size);
     return 0;
 }
