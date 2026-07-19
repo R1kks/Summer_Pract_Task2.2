@@ -15,3 +15,7 @@ typedef struct {
     int chunk_size;
     int chunks_per_line;
 } Config;
+
+void init_config(Config* cfg);
+
+int parse_args(int argc, char** argv, Config* cfg);
