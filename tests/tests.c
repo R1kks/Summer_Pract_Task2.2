@@ -84,6 +84,15 @@ void test_format_string_malformed() {
     remove("test.bin");
 }
 
+void test_process_empty_directory() {
+    system("mkdir empty_test_dir");
+    Config cfg;
+    init_config(&cfg);
+    
+    assert(process_directory("empty_test_dir", &cfg) == 0);
+    system("rmdir empty_test_dir");
+}
+
 int main() {
     printf("--- Starting Integration Tests ---\n");
     RUN_TEST(test_args_no_required_params);
@@ -94,5 +103,6 @@ int main() {
     RUN_TEST(test_file_not_found);
     RUN_TEST(test_offset_exceeds_file_size);
     RUN_TEST(test_format_string_malformed);
+    RUN_TEST(test_process_empty_directory);
     return 0;
 }
