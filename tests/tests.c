@@ -71,6 +71,19 @@ void test_offset_exceeds_file_size() {
     remove("small.bin");
 }
 
+void test_format_string_malformed() {
+    Config cfg;
+    init_config(&cfg);
+    cfg.input_file = "test.bin";
+    cfg.format_str = "%z";
+    
+    FILE* f = fopen("test.bin", "wb");
+    fclose(f);
+    
+    assert(process_file("test.bin", &cfg) == 0);
+    remove("test.bin");
+}
+
 int main() {
     printf("--- Starting Integration Tests ---\n");
     RUN_TEST(test_args_no_required_params);
@@ -80,5 +93,6 @@ int main() {
     RUN_TEST(test_args_negative_offset);
     RUN_TEST(test_file_not_found);
     RUN_TEST(test_offset_exceeds_file_size);
+    RUN_TEST(test_format_string_malformed);
     return 0;
 }
