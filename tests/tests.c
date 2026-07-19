@@ -93,6 +93,20 @@ void test_process_empty_directory() {
     system("rmdir empty_test_dir");
 }
 
+void test_read_file_exactly_block_size() {
+    Config cfg;
+    init_config(&cfg);
+    cfg.chunk_size = 1;
+    cfg.chunks_per_line = 10;
+    
+    FILE* f = fopen("block.bin", "wb");
+    for(int i=0; i<10; i++) fputc('A', f);
+    fclose(f);
+    
+    assert(process_file("block.bin", &cfg) == 0);
+    remove("block.bin");
+}
+
 int main() {
     printf("--- Starting Integration Tests ---\n");
     RUN_TEST(test_args_no_required_params);
@@ -104,5 +118,7 @@ int main() {
     RUN_TEST(test_offset_exceeds_file_size);
     RUN_TEST(test_format_string_malformed);
     RUN_TEST(test_process_empty_directory);
+    RUN_TEST(test_read_file_exactly_block_size);
+    printf("--- All tests passed! ---\n");
     return 0;
 }
