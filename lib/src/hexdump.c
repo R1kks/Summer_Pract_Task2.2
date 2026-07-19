@@ -52,3 +52,23 @@ int process_file(const char* filepath, const Config* cfg) {
     fclose(f);
     return 0;
 }
+
+int process_directory(const char* dirpath, const Config* cfg) {
+    char search_path[1024];
+    snprintf(search_path, sizeof(search_path), "%s/*", dirpath);
+    struct _finddata_t find_data;
+    intptr_t h_find = _findfirst(search_path, &find_data);
+    if (h_find == -1){ 
+        return -1;
+    }
+    do {
+        if (strcmp(find_data.name, ".") != 0 && strcmp(find_data.name, "..") != 0) {
+            char filepath[1024];
+            snprintf(filepath, sizeof(filepath), "%s/%s", dirpath, find_data.name);
+            if (cfg->format_str == NULL) printf("========== %s ==========\n", find_data.name);
+            process_file(filepath, cfg);
+        }
+    } while (_findnext(h_find, &find_data) == 0);
+    _findclose(h_find);
+    return 0;
+}
