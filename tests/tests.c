@@ -59,6 +59,18 @@ void test_file_not_found() {
     assert(process_file("non_existent_file_12345.bin", &cfg) == -1);
 }
 
+void test_offset_exceeds_file_size() {
+    FILE* f = fopen("small.bin", "wb");
+    fprintf(f, "123");
+    fclose(f);
+    
+    Config cfg;
+    init_config(&cfg);
+    cfg.offset = 1000;
+    assert(process_file("small.bin", &cfg) == 0); 
+    remove("small.bin");
+}
+
 int main() {
     printf("--- Starting Integration Tests ---\n");
     RUN_TEST(test_args_no_required_params);
@@ -67,5 +79,6 @@ int main() {
     RUN_TEST(test_args_chunk_size_too_large);
     RUN_TEST(test_args_negative_offset);
     RUN_TEST(test_file_not_found);
+    RUN_TEST(test_offset_exceeds_file_size);
     return 0;
 }
