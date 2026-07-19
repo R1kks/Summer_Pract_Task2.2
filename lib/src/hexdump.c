@@ -18,6 +18,44 @@ static int is_printable(unsigned char c) {
     return (c >= 32 && c <= 126);
 }
 
+static void process_format_string(const Config* cfg, int line_idx, long offset, unsigned char* buffer, size_t read_bytes) {
+    const char* p = cfg->format_str;
+    while (*p) {
+        if (*p == '\\') {
+            p++;
+            if (*p == 'n') printf("\n");
+            else if (*p == 'r') printf("\r");
+            else if (*p == 't') printf("\t");
+            else if (*p == '\\') printf("\\");
+        } else if (*p == '%') {
+            p++;
+            if (*p == 'i') printf("%d", line_idx);
+            else if (*p == 'n') printf("%08lx", (unsigned long)offset);
+            else {
+                char* endptr;
+                int chunk_idx = (int)strtol(p, &endptr, 10);
+                p = endptr;
+                if (*p == 'x') {
+                    int start = chunk_idx * cfg->chunk_size;
+                    for (int j = 0; j < cfg->chunk_size && (start + j) < (int)read_bytes; j++) {
+                        char hex[2];
+                        byte_to_hex(buffer[start + j], hex);
+                        printf("%c%c", hex[0], hex[1]);
+                    }
+                } else if (*p == 'c') {
+                    int start = chunk_idx * cfg->chunk_size;
+                    for (int j = 0; j < cfg->chunk_size && (start + j) < (int)read_bytes; j++) {
+                        printf("%c", is_printable(buffer[start + j]) ? buffer[start + j] : '.');
+                    }
+                }
+            }
+        } else {
+            putchar(*p);
+        }
+        p++;
+    }
+}
+
 int process_file(const char* filepath, const Config* cfg) {
     FILE* f = fopen(filepath, "rb");
     if (!f) { perror(filepath); return -1; }
