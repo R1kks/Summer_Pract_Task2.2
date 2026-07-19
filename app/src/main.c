@@ -12,5 +12,9 @@ int main(int argc, char** argv) {
     Config cfg;
     init_config(&cfg);
 
+    if (parse_args(argc, argv, &cfg) != 0) {
+        return 1;
+    }
+    
     return 0;
 }
